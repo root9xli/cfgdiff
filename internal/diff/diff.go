@@ -51,6 +51,17 @@ func (r *Result) Summary() string {
 	return fmt.Sprintf("%d added, %d removed, %d modified", added, removed, modified)
 }
 
+// FilterByType returns a new Result containing only changes of the specified type.
+func (r *Result) FilterByType(ct ChangeType) *Result {
+	filtered := &Result{}
+	for _, c := range r.Changes {
+		if c.Type == ct {
+			filtered.Changes = append(filtered.Changes, c)
+		}
+	}
+	return filtered
+}
+
 // Compare performs a flat key-by-key diff between two parsed config maps.
 func Compare(base, target map[string]interface{}) *Result {
 	result := &Result{}
