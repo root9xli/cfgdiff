@@ -25,6 +25,27 @@ if err := exporter.Write(changes); err != nil {
 }
 ```
 
+## Writing to a file
+
+To write output directly to a file, open the file and pass it as the writer:
+
+```go
+f, err := os.Create("report.csv")
+if err != nil {
+    log.Fatal(err)
+}
+defer f.Close()
+
+exporter, err := export.New(export.FormatCSV, f)
+if err != nil {
+    log.Fatal(err)
+}
+
+if err := exporter.Write(changes); err != nil {
+    log.Fatal(err)
+}
+```
+
 ## CLI
 
 Pass `--export` and `--export-format` flags to the root command:
