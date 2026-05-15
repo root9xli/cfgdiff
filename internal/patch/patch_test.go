@@ -9,8 +9,8 @@ import (
 )
 
 var baseConfig = map[string]string{
-	"HOST": "localhost",
-	"PORT": "5432",
+	"HOST":  "localhost",
+	"PORT":  "5432",
 	"DEBUG": "false",
 }
 
@@ -79,6 +79,20 @@ func TestApplyForward_MissingKeyForModify(t *testing.T) {
 	_, err := p.Apply(baseConfig)
 	if err == nil {
 		t.Error("expected error for missing key, got nil")
+	}
+}
+
+// TestApplyReverse_Added verifies that reversing an "added" change removes the key.
+func TestApplyReverse_Added(t *testing.T) {
+	withExtra := map[string]string{"HOST": "localhost", "PORT": "5432", "DEBUG": "false", "TIMEOUT": "30s"}
+	changes := []diff.Change{{Type: diff.Added, Key: "TIMEOUT", NewValue: "30s"}}
+	p := New(changes, Reverse)
+	out, err := p.Apply(withExtra)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if _, ok := out["TIMEOUT"]; ok {
+		t.Error("expected TIMEOUT to be removed when reversing an Added change")
 	}
 }
 
