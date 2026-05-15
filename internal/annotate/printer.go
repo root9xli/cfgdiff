@@ -13,10 +13,11 @@ func Print(annotations []Annotation) {
 }
 
 // Fprint writes annotations to the given writer in a tabular format.
-func Fprint(w io.Writer, annotations []Annotation) {
+// If there are no annotations, it prints a message indicating so.
+func Fprint(w io.Writer, annotations []Annotation) error {
 	if len(annotations) == 0 {
-		fmt.Fprintln(w, "no annotations")
-		return
+		_, err := fmt.Fprintln(w, "no annotations")
+		return err
 	}
 
 	tw := tabwriter.NewWriter(w, 0, 0, 2, ' ', 0)
@@ -25,5 +26,5 @@ func Fprint(w io.Writer, annotations []Annotation) {
 	for _, a := range annotations {
 		fmt.Fprintf(tw, "%s\t%s\t%s\n", a.Change.Type, a.Change.Key, a.Note)
 	}
-	tw.Flush()
+	return tw.Flush()
 }
