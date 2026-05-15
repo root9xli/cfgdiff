@@ -76,3 +76,13 @@ func (r *Rules) FilterKeys(keys []string) []string {
 	}
 	return out
 }
+
+// Patterns returns a copy of the ignore patterns held by this Rules instance.
+func (r *Rules) Patterns() []string {
+	if len(r.patterns) == 0 {
+		return nil
+	}
+	out := make([]string, len(r.patterns))
+	copy(out, r.patterns)
+	return out
+}
